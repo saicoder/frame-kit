@@ -24,7 +24,7 @@ export const frameApp = <TContext>(
 			| CanvasRenderingContext2DSettings
 			| undefined,
 	}
-) => {
+): { stop: () => void } => {
 	let lastUpdate = performance.now()
 	let animationHandle = 0
 	const ctx = canvas.getContext('2d', options.canvasSettings)

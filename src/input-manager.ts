@@ -1,6 +1,12 @@
 import { Vector2 } from './vector2.ts'
 
-const DEFAULT_OPTIONS = {
+interface Options {
+	panWithSingleFinger: boolean
+	zoomSensitivity: number
+	touchZoomSensitivity: number
+}
+
+const DEFAULT_OPTIONS: Options = {
 	panWithSingleFinger: false,
 	zoomSensitivity: -0.02,
 	touchZoomSensitivity: 0.02,
@@ -8,8 +14,8 @@ const DEFAULT_OPTIONS = {
 
 export class InputManager {
 	// Cursor
-	public rawCursorPosition = Vector2.zero()
-	public cursorPosition = Vector2.zero()
+	public rawCursorPosition: Vector2 = Vector2.zero()
+	public cursorPosition: Vector2 = Vector2.zero()
 
 	// Touch
 	public initialTouchPosition: Vector2 | null = null
@@ -24,8 +30,8 @@ export class InputManager {
 	public justPan: PanEvent | null = null
 	public justZoom: ZoomEvent | null = null
 
-	public justPressed = new Set<string>()
-	public justReleased = new Set<string>()
+	public justPressed: Set<string> = new Set<string>()
+	public justReleased: Set<string> = new Set<string>()
 
 	// Private
 	private lastPinchDistance: number | null = null
@@ -33,8 +39,8 @@ export class InputManager {
 
 	constructor(
 		public readonly canvas: HTMLCanvasElement,
-		public readonly transform = (t: Vector2) => t,
-		public options = { ...DEFAULT_OPTIONS }
+		public readonly transform: (_: Vector2) => Vector2 = (t: Vector2) => t,
+		public options: Options = { ...DEFAULT_OPTIONS }
 	) {
 		addEventListener('mousemove', this.canvasMouseMove)
 		this.canvas.addEventListener('mousedown', this.canvasMouseDown)
@@ -75,11 +81,14 @@ export class InputManager {
 		this.justReleased.clear()
 	}
 
-	public isKeyDown(key: string) {
+	public isKeyDown(key: string): boolean {
 		return this.downKeys.has(key)
 	}
 
-	private transformPosition(t: { clientX: number; clientY: number }) {
+	private transformPosition(t: {
+		clientX: number
+		clientY: number
+	}): Vector2 {
 		const rect = this.canvas.getBoundingClientRect()
 
 		return this.transform(
@@ -228,7 +237,10 @@ export class InputManager {
 }
 
 export class TouchEvent {
-	constructor(public position: Vector2, public initialPosition = position) {}
+	constructor(
+		public position: Vector2,
+		public initialPosition: Vector2 = position
+	) {}
 }
 
 export class PanEvent {

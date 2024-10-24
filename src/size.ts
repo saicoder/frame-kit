@@ -8,7 +8,7 @@ export interface SizeLike {
 export class Size {
 	constructor(public width: number, public height: number) {}
 
-	toVector() {
+	toVector(): Vector2 {
 		return new Vector2(this.width, this.height)
 	}
 }

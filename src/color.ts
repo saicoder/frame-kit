@@ -1,6 +1,6 @@
 export type Color = `#${string}`
 
-export const toRGBA = (color: Color) => {
+export const toRGBA = (color: Color): [number, number, number, number] => {
 	const hex = color.slice(1)
 
 	let r: number,

@@ -17,11 +17,10 @@ export const loadBitmapFromURL = (url: string): Promise<Bitmap> => {
 	})
 }
 
-export const destroyBitmap = (bitmap: Bitmap) => {
-	if ('close' in bitmap) bitmap.close()
-}
-
-export const bitmapToBlob = (bitmap: Bitmap, opts?: ImageEncodeOptions) => {
+export const bitmapToBlob = (
+	bitmap: Bitmap,
+	opts?: ImageEncodeOptions
+): Promise<Blob> => {
 	const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
 	canvas.getContext('2d')?.drawImage(bitmap, 0, 0)
 	return canvas.convertToBlob(opts)
@@ -31,7 +30,7 @@ export const clipBitmapWithMask = (
 	image: Bitmap,
 	mask: Bitmap,
 	mode: GlobalCompositeOperation = 'source-out'
-) => {
+): ImageBitmap => {
 	if (image.width !== mask.width || mask.height !== mask.height)
 		throw new Error('Mask and image should have same size')
 
@@ -47,7 +46,7 @@ export const clipBitmapWithMask = (
 	return canvas.transferToImageBitmap()
 }
 
-export const getImageData = (image: Bitmap) => {
+export const getImageData = (image: Bitmap): ImageData => {
 	const canvas = new OffscreenCanvas(image.width, image.height)
 	const ctx = canvas.getContext('2d')
 	if (!ctx) throw new Error('Ivalid canvas context')
@@ -59,7 +58,7 @@ export const getImageData = (image: Bitmap) => {
 export const getImageContentRectangle = (
 	image: Bitmap | ImageData,
 	alphaThreshold = 5
-) => {
+): Rectangle | null => {
 	const imageData = image instanceof ImageData ? image : getImageData(image)
 
 	let xmax = 0
@@ -90,7 +89,7 @@ export const resizeBitmap = (
 	mode: 'contain' | 'fill' | 'cover',
 	backgroundFill?: string,
 	pixelate?: boolean
-) => {
+): Bitmap => {
 	if (image.width === size.width && image.height === size.height) return image
 
 	const width = size.width

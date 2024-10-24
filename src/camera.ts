@@ -6,9 +6,9 @@ import { Vector2 } from './vector2.ts'
 // const MAX_ZOOM = 40
 
 export class Camera2D {
-	public windowSize = new Size(0, 0)
+	public windowSize: Size = new Size(0, 0)
 
-	public position = Vector2.zero()
+	public position: Vector2 = Vector2.zero()
 	public scale = 1
 
 	// === METHODS ===
@@ -40,7 +40,7 @@ export class Camera2D {
 			) * 0.65
 	}
 
-	public screenToWorld = (screenPoint: Vector2) => {
+	public screenToWorld = (screenPoint: Vector2): Vector2 => {
 		const translatedPoint = new Vector2(
 			Math.round(
 				(screenPoint.x - this.windowSize.width / 2) / this.scale +
@@ -55,7 +55,7 @@ export class Camera2D {
 		return translatedPoint
 	}
 
-	public getTransform() {
+	public getTransform(): DOMMatrix {
 		return new DOMMatrix()
 			.translate(this.windowSize.width / 2, this.windowSize.height / 2)
 			.scale(this.scale, this.scale)

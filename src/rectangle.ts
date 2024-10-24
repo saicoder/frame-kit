@@ -12,8 +12,8 @@ export class Rectangle {
 	constructor(
 		public x = 0,
 		public y = 0,
-		public width = Number.MAX_SAFE_INTEGER,
-		public height = Number.MAX_SAFE_INTEGER
+		public width: number = Number.MAX_SAFE_INTEGER,
+		public height: number = Number.MAX_SAFE_INTEGER
 	) {}
 
 	get size(): Size {
@@ -67,7 +67,7 @@ export class Rectangle {
 	}
 
 	// ================== METHODS ====================
-	contains(p: XY) {
+	contains(p: XY): boolean {
 		return (
 			p.x >= this.x &&
 			p.x < this.x + this.width &&
@@ -76,7 +76,7 @@ export class Rectangle {
 		)
 	}
 
-	intersects(r2: Rectangle) {
+	intersects(r2: Rectangle): boolean {
 		if (this.x + this.width <= r2.x || r2.x + r2.width <= this.x) {
 			return false
 		}
@@ -87,7 +87,7 @@ export class Rectangle {
 		return true
 	}
 
-	extendFromCenter(dims: XY) {
+	extendFromCenter(dims: XY): Rectangle {
 		const xv = dims.x / 2
 		const yv = dims.y / 2
 
@@ -99,7 +99,7 @@ export class Rectangle {
 		)
 	}
 
-	transform(matrix: DOMMatrix) {
+	transform(matrix: DOMMatrix): Rectangle {
 		const newX = this.x + matrix.e
 		const newY = this.y + matrix.f
 
@@ -111,7 +111,11 @@ export class Rectangle {
 	}
 
 	// ================== STATIC ====================
-	static fromVector(vector: XY, size: Size, indices: Corner = 'topLeft') {
+	static fromVector(
+		vector: XY,
+		size: Size,
+		indices: Corner = 'topLeft'
+	): Rectangle {
 		const rect = new Rectangle(0, 0, size.width, size.height)
 		if (indices === 'center') rect.center = vector
 		if (indices === 'topLeft') rect.topLeft = vector
@@ -122,7 +126,7 @@ export class Rectangle {
 		return rect
 	}
 
-	static fromVertices(points: XY[]) {
+	static fromVertices(points: XY[]): Rectangle {
 		const xs = points.map((t) => t.x)
 		const ys = points.map((t) => t.y)
 
@@ -135,7 +139,7 @@ export class Rectangle {
 		return new Rectangle(x, y, w, h)
 	}
 
-	static boundingBox(rects: Rectangle[]) {
+	static boundingBox(rects: Rectangle[]): Rectangle {
 		const xs = rects.map((t) => [t.x, t.x + t.width]).flat()
 		const ys = rects.map((t) => [t.y, t.y + t.height]).flat()
 
