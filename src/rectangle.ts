@@ -1,5 +1,5 @@
 import { Size } from './size.ts'
-import { Vector2, XY } from './vector2.ts'
+import { Vector2, type XY } from './vector2.ts'
 
 export type Corner =
 	| 'topLeft'

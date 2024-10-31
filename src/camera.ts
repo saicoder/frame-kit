@@ -1,4 +1,4 @@
-import { Rectangle } from './rectangle.ts'
+import type { Rectangle } from './rectangle.ts'
 import { Size } from './size.ts'
 import { Vector2 } from './vector2.ts'
 

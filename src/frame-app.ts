@@ -1,3 +1,4 @@
+import type { Destroyable } from './base.ts'
 import { Size } from './size.ts'
 
 export interface UpdateProps {
@@ -15,24 +16,28 @@ export interface Component<TContext> {
 	render: (_: RenderProps & TContext) => void
 }
 
+export interface FrameAppOptions {
+	canvasSettings?: CanvasRenderingContext2DSettings
+}
+
+export interface FrameApp extends Destroyable {
+	recalculateCanvasSize: () => void
+}
+
 export const frameApp = <TContext>(
 	canvas: HTMLCanvasElement,
 	context: TContext,
 	mainComponent: Component<TContext>,
-	options = {
-		canvasSettings: undefined as
-			| CanvasRenderingContext2DSettings
-			| undefined,
-	}
-): { stop: () => void } => {
+	options?: FrameAppOptions
+): FrameApp => {
 	let lastUpdate = performance.now()
 	let animationHandle = 0
-	const ctx = canvas.getContext('2d', options.canvasSettings)
+	const ctx = canvas.getContext('2d', options?.canvasSettings)
 	const windowSize = new Size(0, 0)
 
-	if (!ctx) throw new Error('Invalid rendeding context for canvas')
+	if (!ctx) throw new Error('Invalid rendering context for canvas')
 
-	const resizeCanvas = () => {
+	const recalculateCanvasSize = () => {
 		const ratio =
 			typeof devicePixelRatio === 'number' ? devicePixelRatio : 1
 
@@ -59,14 +64,15 @@ export const frameApp = <TContext>(
 		animationHandle = requestAnimationFrame(tick)
 	}
 
-	resizeCanvas()
-	addEventListener('resize', resizeCanvas)
+	recalculateCanvasSize()
+	addEventListener('resize', recalculateCanvasSize)
 	animationHandle = requestAnimationFrame(tick)
 
 	return {
-		stop: () => {
+		recalculateCanvasSize,
+		destroy: () => {
 			cancelAnimationFrame(animationHandle)
-			removeEventListener('resize', resizeCanvas)
+			removeEventListener('resize', recalculateCanvasSize)
 		},
 	}
 }

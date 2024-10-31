@@ -1,3 +1,4 @@
+import type { Destroyable } from './base.ts'
 import { Vector2 } from './vector2.ts'
 
 interface Options {
@@ -12,7 +13,7 @@ const DEFAULT_OPTIONS: Options = {
 	touchZoomSensitivity: 0.02,
 }
 
-export class InputManager {
+export class InputManager implements Destroyable {
 	// Cursor
 	public rawCursorPosition: Vector2 = Vector2.zero()
 	public cursorPosition: Vector2 = Vector2.zero()

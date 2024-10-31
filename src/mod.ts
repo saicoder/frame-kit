@@ -1,4 +1,5 @@
 export * from './math.ts'
+export * from './base.ts'
 export * from './vector2.ts'
 export * from './camera.ts'
 export * from './input-manager.ts'
